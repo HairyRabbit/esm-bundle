@@ -6,7 +6,7 @@ Bundle library as ESModule
 ## installation 
 
 ```sh
-yarn add esm-bundle
+yarn add esm-bundle webpack
 ```
 
 ## usage

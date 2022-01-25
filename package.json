@@ -26,5 +26,8 @@
   },
   "peerDependencies": {
     "webpack": "^5"
+  },
+  "engines": {
+    "node": ">14"
   }
 }
