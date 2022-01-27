@@ -100,3 +100,37 @@ export function flat_entry(entry: Entry) {
   }
   return entries
 }
+
+export function print_entry(entry: Entry): void {
+  let out = '\n'
+  for (const i in entry) {
+    if (Object.prototype.hasOwnProperty.call(entry, i)) {
+      out += `${i}:\n`
+      const mod = entry[i]
+      
+      for (const j in mod) {
+        if (Object.prototype.hasOwnProperty.call(mod, j)) {
+          out += `${indent(1)}- ${j}:\n`
+          const exports = mod[j]
+          out += `${indent(3)}default: ${exports.default.toString()}\n`
+          out += `${indent(3)}named: `
+          if(0 === exports.named.length) {
+            out += 'no member\n'
+          }
+          else {
+            out += '\n'
+            exports.named.map(item => {
+              out += `${indent(4)}- ${item}\n`
+            })
+          }
+        }
+      }
+    }
+  }
+  out += `\n`
+  console.log(out)
+
+  function indent(length: number) {
+    return ' '.repeat(length * 2)
+  }
+}

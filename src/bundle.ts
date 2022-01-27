@@ -21,12 +21,17 @@ export async function use_bundle(require: NodeRequire, bundler?: Bundler): Promi
     }
     
     default: {
-      const resolved = find_bundler(require)
-      if(undefined === resolved) {
-        throw new Error(`Unknown bundler "${bundler}"`)
+      if(undefined === bundler) {
+        throw new Error(`No bundler, you should install one of bundler ${Bundlers.join(', ')}.`)
       }
+      else {
+        const resolved = find_bundler(require)
+        if(undefined === resolved) {
+          throw new Error(`Unknown bundler: "${bundler}", custom bundler are not supports yet.`)
+        }
 
-      return use_bundle(require, resolved)
+        return use_bundle(require, resolved)
+      }
     }
   }
 }
@@ -38,7 +43,6 @@ function find_bundler(require: NodeRequire) {
       return true
     }
     catch(e) {
-      console.log(e)
       return false
     }
   })
