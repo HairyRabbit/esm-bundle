@@ -1,7 +1,8 @@
 {
   "name": "esm-bundle",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.4",
+  "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js"
   },
