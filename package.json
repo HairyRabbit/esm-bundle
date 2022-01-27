@@ -1,7 +1,7 @@
 {
   "name": "esm-bundle",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.10",
   "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js"
@@ -29,6 +29,18 @@
   },
   "dependencies": {
     "yargs": "^17.3.1"
+  },
+  "peerDependencies": {
+    "webpack": "^5",
+    "esbuild": "^0.14.14"
+  },
+  "peerDependenciesMeta": {
+    "webpack": {
+      "optional": true
+    },
+    "esbuild": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">14"
