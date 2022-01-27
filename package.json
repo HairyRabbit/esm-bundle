@@ -1,12 +1,17 @@
 {
   "name": "esm-bundle",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "exports": {
     ".": "./lib/index.js"
   },
+  "bin": {
+    "esm": "./bin/esm-bundle.mjs",
+    "esm-bundle": "./bin/esm-bundle.mjs"
+  },
   "files": [
-    "lib"
+    "lib",
+    "bin"
   ],
   "packageManager": "yarn@3.1.1",
   "scripts": {
@@ -15,17 +20,14 @@
     "prepublish": "yarn build"
   },
   "devDependencies": {
-    "react": "beta",
-    "react-dom": "beta",
-    "react-router-dom": "^6.2.1",
+    "@types/node": "^17.0.12",
+    "@types/yargs": "^17.0.8",
+    "esbuild": "^0.14.14",
     "typescript": "^4.5.5",
     "webpack": "^5.67.0"
   },
   "dependencies": {
-    "memfs": "^3.4.1"
-  },
-  "peerDependencies": {
-    "webpack": "^5"
+    "yargs": "^17.3.1"
   },
   "engines": {
     "node": ">14"

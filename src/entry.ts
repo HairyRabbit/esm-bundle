@@ -1,26 +1,42 @@
-import { createRequire } from 'node:module'
-import process from 'node:process'
+import { pathToFileURL } from 'node:url'
 
-export function get_entry(modules: string[], require: NodeRequire) {  
-  return modules.map(mod => {
-    return get_module_files(mod, require)
-  }).flat()
+export type Entry = { [key: string]: { [key: string]: ModuleExport } }
+export type ModuleExport = { default: boolean, named: string[] }
+
+export async function get_exports(modules: string[], require: NodeRequire) {
+  const entry: Entry = {}
+
+  for (let i = 0; i < modules.length; i++) {
+    const mod = modules[i]
+    entry[mod] = {}
+
+    const sub_mods = get_package_exports(mod, require)
+
+    for (let j = 0; j < sub_mods.length; j++) {
+      const sub_mod = sub_mods[j]
+      const exports = await get_module_exports(sub_mod, require)
+      entry[mod][sub_mod] = exports
+    }
+  }
+
+  return entry
 }
 
-function get_module_files(mod: string, require: NodeRequire) {
-  const resolved = require.resolve(`${mod}/package.json`)
+function get_package_exports(module: string, require: NodeRequire) {
+  const resolved = require.resolve(`${module}/package.json`)
   const pkg = require(resolved)
   const exports = pkg.exports
-  const files = [mod]
+  const files = [module]
 
   if (undefined === exports) return files
 
   for (const name in exports) {
     if (Object.prototype.hasOwnProperty.call(exports, name)) {
-      /**@TODO add excludes to filter export names */
-      if (~['.', './index', './', './build-info.json'].indexOf(name)) continue
+      if (~['.', './index', './'].indexOf(name)) continue
 
-      const export_name = mod + '/' + name.replace(/^\.\//, '')
+      const export_name = module + '/' + name.replace(/^\.\//, '')
+      
+      /** some reason, file defined in exports but not exists, should test first */
       try {
         require.resolve(export_name)
         files.push(export_name)
@@ -32,4 +48,55 @@ function get_module_files(mod: string, require: NodeRequire) {
   }
 
   return files
+}
+
+async function get_module_exports(module: string, require: NodeRequire): Promise<ModuleExport> {
+  const resolved = require.resolve(module)
+  const instance = await import(pathToFileURL(resolved).pathname)
+  const { default: _default, ...named } = instance
+  return {
+    default: Boolean(_default),
+    named: Object.keys(named),
+  }
+}
+
+
+export function create_entry_code(name: string, exports: ModuleExport) {
+  let code = ''
+
+  const DefaultExport = '__DEFAULT_EXPORT__'
+
+  code += 'import '
+  if(exports.default) code += `${DefaultExport}`
+  if(0 !== exports.named.length) {
+    if(exports.default) code += ','
+    code += `{${exports.named.map(name => `${name} as __${name}__`).join(',')}}`
+  }
+  else {
+    code += ' '
+  }
+  code += `from "${name}";`
+
+  if(exports.default) code += `export default ${DefaultExport};`
+  if(0 !== exports.named.length) {
+    code += `export{${exports.named.map(name => `__${name}__ as ${name}`).join(',')}};`
+  }
+  
+  return code
+}
+
+export function flat_entry(entry: Entry) {
+  const entries: [ string, ModuleExport ][] = []
+  for (const i in entry) {
+    if (Object.prototype.hasOwnProperty.call(entry, i)) {
+      const mod = entry[i]
+      for (const j in mod) {
+        if (Object.prototype.hasOwnProperty.call(mod, j)) {
+          const exports = mod[j]
+          entries.push([ j, exports ])
+        }
+      }
+    }
+  }
+  return entries
 }

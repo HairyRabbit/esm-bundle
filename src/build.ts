@@ -1,14 +1,15 @@
 import { createRequire } from 'node:module'
-import { get_entry } from './entry.js'
-import { compile } from './compiler.js'
+import { get_exports } from './entry.js'
+import { use_bundle, Bundler } from './bundle.js'
 
 type BuildOptions = {
-  readonly context?: string,
-  readonly output?: string
+  readonly bundler?: Bundler,
+  readonly output: string
 }
 
-export async function build(modules: string[], options: BuildOptions = {}) {
-  const require = createRequire(options.context ?? import.meta.url)
-  const entry = get_entry(modules, require)
-  await compile(entry, require, options.output ?? './dist')
+export async function build(modules: string[], options: BuildOptions) {
+  const require = createRequire(import.meta.url)
+  const entries = await get_exports(modules, require)
+  const bundle = await use_bundle(require, options.bundler)
+  await bundle(entries, options.output ?? './dist')
 }
