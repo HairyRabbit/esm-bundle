@@ -39,10 +39,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^17.0.12":
-  version: 17.0.12
-  resolution: "@types/node@npm:17.0.12"
-  checksum: f7e4c384b72648550391c2c8bd42560dfccf5b7a0506fb5842f326f8b176286be279dd63f62af621fe6d409d474ea5d312855061f512132e999f4e902a22e4db
+"@types/node@npm:*, @types/node@npm:^17.0.12, @types/node@npm:^17.0.13":
+  version: 17.0.13
+  resolution: "@types/node@npm:17.0.13"
+  checksum: 8b87c850c1604c65e3474bd03d122914464b7970caed20f65f4a7706ab429353b896a3916be4d2581164eccda9e3dd95c338fbccf686ff85a824c40d15e8f3fa
   languageName: node
   linkType: hard
 
@@ -305,9 +305,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001286":
-  version: 1.0.30001302
-  resolution: "caniuse-lite@npm:1.0.30001302"
-  checksum: 612689059f6a9aeebad43afeabac655308ddbad8e0f345030edf7656564cf9d0d5af10e3cbf61b64b09b06a97f82ba3788f5621d6526c7a3e7e068cae88d6782
+  version: 1.0.30001303
+  resolution: "caniuse-lite@npm:1.0.30001303"
+  checksum: fe77fb680c94c875be2fb78c9507a69d3ed6be8894832d3ee8a7d24e4c5c7599bf217f030fcdfd761ea211065042679bf697a57eefe114058a3208561e2fd042
   languageName: node
   linkType: hard
 
@@ -353,9 +353,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.17":
-  version: 1.4.54
-  resolution: "electron-to-chromium@npm:1.4.54"
-  checksum: 4c078dc6d5e664d14c166e966e013144a774ab3dd1a853a10fc7bab57c6dafcfc1c451c329ad7c4d45da6ac463fab463e079a32f250b37e7954bbe2ed83ad52e
+  version: 1.4.57
+  resolution: "electron-to-chromium@npm:1.4.57"
+  checksum: 42a922c688bffeab1612e7dee8ba946351ae6af465c0b5ee63ac4a7c0928d2bdf1f0cd147c3fa74dd73e933e57664bfe1083a9a317880918726fc3d0b366fe3d
   languageName: node
   linkType: hard
 
@@ -591,16 +591,57 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esm-bundle@workspace:.":
+"esm-bundle-cli@workspace:package/cli":
   version: 0.0.0-use.local
-  resolution: "esm-bundle@workspace:."
+  resolution: "esm-bundle-cli@workspace:package/cli"
   dependencies:
     "@types/node": ^17.0.12
+    "@types/yargs": ^17.0.8
+    esbuild: ^0.14.14
+    esm-bundle: "workspace:*"
+    typescript: ^4.5.5
+    webpack: ^5.67.0
+    yargs: ^17.3.1
+  peerDependencies:
+    esbuild: ^0.14.14
+    webpack: ^5
+  peerDependenciesMeta:
+    esbuild:
+      optional: true
+    webpack:
+      optional: true
+  bin:
+    esm: ./bin/esm-bundle.mjs
+    esm-bundle: ./bin/esm-bundle.mjs
+  languageName: unknown
+  linkType: soft
+
+"esm-bundle-workspace@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "esm-bundle-workspace@workspace:."
+  dependencies:
+    typescript: ^4.5.5
+  languageName: unknown
+  linkType: soft
+
+"esm-bundle@workspace:*, esm-bundle@workspace:package/core":
+  version: 0.0.0-use.local
+  resolution: "esm-bundle@workspace:package/core"
+  dependencies:
+    "@types/node": ^17.0.13
     "@types/yargs": ^17.0.8
     esbuild: ^0.14.14
     typescript: ^4.5.5
     webpack: ^5.67.0
     yargs: ^17.3.1
+  peerDependencies:
+    esbuild: ^0.14.14
+    webpack: ^5
+  peerDependenciesMeta:
+    esbuild:
+      optional: true
+    webpack:
+      optional: true
   bin:
     esm: ./bin/esm-bundle.mjs
     esm-bundle: ./bin/esm-bundle.mjs
